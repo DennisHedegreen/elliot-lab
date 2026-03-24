@@ -1,0 +1,29 @@
+# OS / editor noise
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/
+
+# Python
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.venv/
+venv/
+
+# Build / coverage
+build/
+dist/
+htmlcov/
+.coverage
+coverage/
+
+# Node / frontend
+node_modules/
+
+# Logs / local runtime artifacts
+*.log
+tmp/
+temp/
