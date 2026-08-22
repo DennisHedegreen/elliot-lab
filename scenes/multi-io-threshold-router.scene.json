@@ -1,0 +1,244 @@
+{
+  "format_version": 1,
+  "scene_id": "multi-io-threshold-router",
+  "title": "Multi IO Threshold Router",
+  "view": {
+    "tick_ms": 600
+  },
+  "runtime": {
+    "tick": 0,
+    "total_water": 0,
+    "conservation_delta": 0,
+    "conservation_ok": true
+  },
+  "module_interface_draft": {
+    "inputs": [
+      {
+        "id": "left-in",
+        "name": "Left Stim",
+        "component_id": "bucket-left",
+        "port_id": "in"
+      },
+      {
+        "id": "right-in",
+        "name": "Right Stim",
+        "component_id": "bucket-right",
+        "port_id": "in"
+      }
+    ],
+    "outputs": [
+      {
+        "id": "left-out",
+        "name": "Left Readout",
+        "component_id": "bucket-left",
+        "port_id": "out"
+      },
+      {
+        "id": "right-out",
+        "name": "Right Readout",
+        "component_id": "bucket-right",
+        "port_id": "out"
+      }
+    ]
+  },
+  "components": [
+    {
+      "id": "source-left",
+      "type": "source",
+      "label": "Left Source",
+      "position": {
+        "x": 84,
+        "y": 148
+      },
+      "config": {
+        "width": 12,
+        "height": 18,
+        "capacity": 24,
+        "emit_rate": 1.1,
+        "burst_amount": 3
+      },
+      "state": {
+        "current_level": 0
+      }
+    },
+    {
+      "id": "source-right",
+      "type": "source",
+      "label": "Right Source",
+      "position": {
+        "x": 84,
+        "y": 344
+      },
+      "config": {
+        "width": 12,
+        "height": 18,
+        "capacity": 24,
+        "emit_rate": 1.1,
+        "burst_amount": 3
+      },
+      "state": {
+        "current_level": 0
+      }
+    },
+    {
+      "id": "bucket-left",
+      "type": "bucket",
+      "label": "Left Threshold Bucket",
+      "position": {
+        "x": 338,
+        "y": 116
+      },
+      "config": {
+        "width": 17,
+        "height": 24,
+        "capacity": 20,
+        "outlet_height": 1,
+        "outlet_size": 1
+      },
+      "state": {
+        "current_level": 0
+      }
+    },
+    {
+      "id": "bucket-right",
+      "type": "bucket",
+      "label": "Right Threshold Bucket",
+      "position": {
+        "x": 338,
+        "y": 312
+      },
+      "config": {
+        "width": 17,
+        "height": 24,
+        "capacity": 20,
+        "outlet_height": 1,
+        "outlet_size": 1
+      },
+      "state": {
+        "current_level": 0
+      }
+    },
+    {
+      "id": "output-left",
+      "type": "output_basin",
+      "label": "Left Output",
+      "position": {
+        "x": 706,
+        "y": 146
+      },
+      "config": {
+        "width": 18,
+        "height": 14,
+        "capacity": 999999
+      },
+      "state": {
+        "current_level": 0
+      }
+    },
+    {
+      "id": "output-right",
+      "type": "output_basin",
+      "label": "Right Output",
+      "position": {
+        "x": 706,
+        "y": 342
+      },
+      "config": {
+        "width": 18,
+        "height": 14,
+        "capacity": 999999
+      },
+      "state": {
+        "current_level": 0
+      }
+    }
+  ],
+  "connections": [
+    {
+      "id": "pipe-left-in",
+      "type": "pipe",
+      "label": "Left Input Harness",
+      "from_component": "source-left",
+      "from_port": "out",
+      "to_component": "bucket-left",
+      "to_port": "in",
+      "config": {
+        "width": 14,
+        "length": 220,
+        "max_flow_per_tick": 1.1,
+        "transit_ticks": 2
+      },
+      "state": {
+        "segments": [
+          0,
+          0
+        ]
+      }
+    },
+    {
+      "id": "pipe-right-in",
+      "type": "pipe",
+      "label": "Right Input Harness",
+      "from_component": "source-right",
+      "from_port": "out",
+      "to_component": "bucket-right",
+      "to_port": "in",
+      "config": {
+        "width": 14,
+        "length": 220,
+        "max_flow_per_tick": 1.1,
+        "transit_ticks": 2
+      },
+      "state": {
+        "segments": [
+          0,
+          0
+        ]
+      }
+    },
+    {
+      "id": "pipe-left-out",
+      "type": "pipe",
+      "label": "Left Output Harness",
+      "from_component": "bucket-left",
+      "from_port": "out",
+      "to_component": "output-left",
+      "to_port": "in",
+      "config": {
+        "width": 12,
+        "length": 260,
+        "max_flow_per_tick": 1,
+        "transit_ticks": 3
+      },
+      "state": {
+        "segments": [
+          0,
+          0,
+          0
+        ]
+      }
+    },
+    {
+      "id": "pipe-right-out",
+      "type": "pipe",
+      "label": "Right Output Harness",
+      "from_component": "bucket-right",
+      "from_port": "out",
+      "to_component": "output-right",
+      "to_port": "in",
+      "config": {
+        "width": 12,
+        "length": 260,
+        "max_flow_per_tick": 1,
+        "transit_ticks": 3
+      },
+      "state": {
+        "segments": [
+          0,
+          0,
+          0
+        ]
+      }
+    }
+  ]
+}

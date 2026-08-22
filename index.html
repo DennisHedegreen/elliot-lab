@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Adaptive Circuit Systems — Circuit Lab</title>
+    <meta
+      name="description"
+      content="Graphical browser workbench for bucket, pipe, and water-flow experiments in Circuit Lab, the current bench inside Adaptive Circuit Systems."
+    />
+    <link rel="stylesheet" href="./styles.css" />
+  </head>
+  <body>
+    <div class="app-shell">
+      <header class="topbar">
+        <div class="brand-block">
+          <p class="eyebrow">Adaptive Circuit Systems</p>
+          <h1>Closed Flow Bench</h1>
+          <p class="brand-note">
+            Buckets and pipes first. Save scenes. No water disappears.
+          </p>
+        </div>
+
+        <div class="scene-title-block">
+          <label class="field-label" for="scene-title-input">Scene Title</label>
+          <input id="scene-title-input" class="scene-title-input" type="text" />
+          <p id="scene-meta" class="scene-meta"></p>
+        </div>
+
+        <div class="topbar-actions">
+          <div class="mode-toggle" aria-label="View mode">
+            <button id="water-mode-button" class="action-button mode-toggle-button">Water Mode</button>
+            <button id="build-mode-button" class="action-button mode-toggle-button">Build Mode</button>
+          </div>
+          <button id="auto-interface-button" class="action-button">Auto Interface</button>
+          <button id="export-module-button" class="action-button action-button-accent">
+            Export Module
+          </button>
+          <button id="open-builder-button" class="action-button">Open Module Builder</button>
+          <button id="save-draft-button" class="action-button">Save Draft</button>
+          <button id="load-draft-button" class="action-button">Load Draft</button>
+          <button id="save-file-button" class="action-button action-button-accent">
+            Save File
+          </button>
+          <button id="load-file-button" class="action-button">Load File</button>
+          <button id="reset-demo-button" class="action-button">Reset Demo</button>
+          <input id="scene-file-input" type="file" accept=".json,.scene.json,application/json" hidden />
+        </div>
+      </header>
+
+      <main class="layout-grid">
+        <aside class="left-rail">
+          <section class="panel">
+            <div class="panel-head">
+              <p class="panel-eyebrow">Palette</p>
+              <h2>Add Components</h2>
+            </div>
+            <div class="palette-grid">
+              <button class="palette-button" data-add-type="source">Add Source</button>
+              <button class="palette-button" data-add-type="bucket">Add Bucket</button>
+              <button class="palette-button" data-add-type="leaky_bucket">Add Leaky Bucket</button>
+              <button class="palette-button" data-add-type="siphon">Add Siphon</button>
+              <button class="palette-button" data-add-type="output_basin">Add Output Basin</button>
+              <button class="palette-button" data-add-type="reservoir">Add Reservoir</button>
+            </div>
+            <p class="panel-note">
+              Components can be moved on the canvas. Pipes can be dragged from ports or built
+              explicitly below.
+            </p>
+          </section>
+
+          <section class="panel">
+            <div class="panel-head">
+              <p class="panel-eyebrow">Build</p>
+              <h2>Pipe Builder</h2>
+            </div>
+
+            <form id="pipe-builder-form" class="stack-form">
+              <label class="field">
+                <span class="field-label">From</span>
+                <select id="pipe-from-select"></select>
+              </label>
+
+              <label class="field">
+                <span class="field-label">To</span>
+                <select id="pipe-to-select"></select>
+              </label>
+
+              <div class="field-row">
+                <label class="field">
+                  <span class="field-label">Pipe Width</span>
+                  <input id="pipe-width-input" type="number" min="4" max="40" step="1" value="14" />
+                </label>
+
+                <label class="field">
+                  <span class="field-label">Pipe Length</span>
+                  <input id="pipe-length-input" type="number" min="40" max="600" step="10" value="220" />
+                </label>
+              </div>
+
+              <div class="field-row">
+                <label class="field">
+                  <span class="field-label">Max Flow</span>
+                  <input id="pipe-flow-input" type="number" min="0.1" max="10" step="0.1" value="1.0" />
+                </label>
+
+                <label class="field">
+                  <span class="field-label">Transit Ticks</span>
+                  <input id="pipe-transit-input" type="number" min="1" max="12" step="1" value="2" />
+                </label>
+              </div>
+
+              <button
+                id="pipe-builder-submit"
+                type="submit"
+                class="action-button action-button-wide action-button-accent"
+              >
+                Add Pipe
+              </button>
+              <p id="pipe-builder-note" class="panel-note panel-note-tight"></p>
+            </form>
+          </section>
+
+          <section class="panel">
+            <div class="panel-head">
+              <p class="panel-eyebrow">Objects</p>
+              <h2>Scene Objects</h2>
+            </div>
+            <div id="object-list" class="object-list"></div>
+          </section>
+        </aside>
+
+        <section class="workspace-panel">
+          <div class="workspace-top">
+            <div class="transport-bar transport-bar-top">
+              <div class="transport-buttons">
+                <button id="burst-button" class="transport-button transport-button-accent">Burst</button>
+                <button id="play-button" class="transport-button">Play</button>
+                <button id="pause-button" class="transport-button">Pause</button>
+                <button id="step-button" class="transport-button">Step</button>
+                <button id="reset-button" class="transport-button">Reset</button>
+                <button id="zones-button" class="transport-button">Show Zones</button>
+              </div>
+
+              <div class="transport-settings">
+                <label class="field transport-field">
+                  <span class="field-label">Tick Speed</span>
+                  <input id="tick-speed-input" type="range" min="120" max="1400" step="20" value="600" />
+                </label>
+                <p id="tick-speed-readout" class="transport-readout">600 ms</p>
+              </div>
+            </div>
+
+            <div class="status-cards">
+              <article class="status-card">
+                <p class="status-label">Last Burst</p>
+                <p id="last-burst-value" class="status-value">0.00</p>
+              </article>
+              <article class="status-card">
+                <p class="status-label">In Circuit</p>
+                <p id="in-circuit-value" class="status-value">0.00</p>
+              </article>
+              <article class="status-card">
+                <p class="status-label">Out</p>
+                <p id="out-value" class="status-value">0.00</p>
+              </article>
+              <article class="status-card">
+                <p class="status-label">Reservoir</p>
+                <p id="reservoir-value" class="status-value">0.00</p>
+              </article>
+              <article class="status-card">
+                <p class="status-label">Accounted</p>
+                <p id="accounted-value" class="status-value">0.00</p>
+              </article>
+              <article class="status-card status-card-secondary">
+                <p class="status-label">Tick</p>
+                <p id="tick-value" class="status-value">0</p>
+              </article>
+              <article class="status-card status-card-secondary">
+                <p class="status-label">State</p>
+                <p id="system-state-value" class="status-value">Stable</p>
+              </article>
+            </div>
+
+            <div class="workspace-meta">
+              <p id="scene-summary" class="scene-summary"></p>
+              <p id="selection-meta" class="scene-summary"></p>
+            </div>
+
+            <section id="water-selection-strip" class="water-selection-strip" hidden></section>
+
+          </div>
+
+          <div id="canvas-surface" class="canvas-surface" aria-label="Circuit Lab canvas">
+            <svg id="pipe-layer" class="pipe-layer"></svg>
+            <div id="component-layer" class="component-layer"></div>
+          </div>
+
+          <section class="lab-log-panel" aria-label="Lab log">
+            <div class="lab-log-head">
+              <div>
+                <p class="panel-eyebrow">Lab Log</p>
+                <h3 id="lab-log-title">Recent Burst Flow</h3>
+              </div>
+              <button id="story-toggle-button" class="action-button story-toggle-button">Show Story</button>
+            </div>
+            <div id="lab-log-list" class="lab-log-list"></div>
+          </section>
+        </section>
+
+        <aside class="right-rail">
+          <section class="panel inspector-panel">
+            <div class="panel-head">
+              <p class="panel-eyebrow">Inspector</p>
+              <h2>Selected Object</h2>
+            </div>
+
+            <div id="inspector-content" class="inspector-content"></div>
+
+            <div class="inspector-actions">
+              <button id="delete-selection-button" class="action-button action-button-wide">
+                Delete Selection
+              </button>
+            </div>
+          </section>
+        </aside>
+      </main>
+
+    </div>
+
+    <script src="./app.js"></script>
+  </body>
+</html>

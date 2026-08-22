@@ -1,0 +1,136 @@
+{
+  "format_version": 1,
+  "scene_id": "classic-reservoir-return-demo",
+  "title": "Classic Reservoir Return Demo",
+  "view": {
+    "tick_ms": 600
+  },
+  "runtime": {
+    "tick": 0,
+    "total_water": 0,
+    "conservation_delta": 0,
+    "conservation_ok": true
+  },
+  "components": [
+    {
+      "id": "source-1",
+      "type": "source",
+      "label": "Source",
+      "position": {
+        "x": 96,
+        "y": 176
+      },
+      "config": {
+        "width": 12,
+        "height": 18,
+        "capacity": 24,
+        "emit_rate": 1,
+        "burst_amount": 4
+      },
+      "state": {
+        "current_level": 0
+      }
+    },
+    {
+      "id": "leaky-bucket-1",
+      "type": "leaky_bucket",
+      "label": "Leaky Bucket",
+      "position": {
+        "x": 364,
+        "y": 130
+      },
+      "config": {
+        "width": 16,
+        "height": 22,
+        "capacity": 20,
+        "outlet_height": 10,
+        "outlet_size": 0.5,
+        "leak_rate": 0.5,
+        "leak_target_id": "reservoir-1"
+      },
+      "state": {
+        "current_level": 0
+      }
+    },
+    {
+      "id": "reservoir-1",
+      "type": "reservoir",
+      "label": "Reservoir 1",
+      "position": {
+        "x": 528,
+        "y": 396
+      },
+      "config": {
+        "width": 18,
+        "height": 14,
+        "capacity": 30,
+        "return_rate": 0.5
+      },
+      "state": {
+        "current_level": 0
+      }
+    },
+    {
+      "id": "output-1",
+      "type": "output_basin",
+      "label": "Output Basin",
+      "position": {
+        "x": 796,
+        "y": 220
+      },
+      "config": {
+        "width": 18,
+        "height": 14,
+        "capacity": 30
+      },
+      "state": {
+        "current_level": 0
+      }
+    }
+  ],
+  "connections": [
+    {
+      "id": "pipe-1",
+      "type": "pipe",
+      "label": "Source Pipe",
+      "from_component": "source-1",
+      "from_port": "out",
+      "to_component": "leaky-bucket-1",
+      "to_port": "in",
+      "config": {
+        "width": 14,
+        "length": 220,
+        "max_flow_per_tick": 1,
+        "transit_ticks": 2
+      },
+      "state": {
+        "segments": [
+          0,
+          0
+        ]
+      }
+    },
+    {
+      "id": "pipe-2",
+      "type": "pipe",
+      "label": "Reservoir Return",
+      "from_component": "reservoir-1",
+      "from_port": "out",
+      "to_component": "output-1",
+      "to_port": "in",
+      "config": {
+        "width": 12,
+        "length": 260,
+        "max_flow_per_tick": 0.5,
+        "transit_ticks": 3
+      },
+      "state": {
+        "segments": [
+          0,
+          0,
+          0
+        ]
+      }
+    }
+  ]
+}

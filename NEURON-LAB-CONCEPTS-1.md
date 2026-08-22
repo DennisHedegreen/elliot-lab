@@ -1,4 +1,4 @@
-# Neuron Lab — Concept Document
+# Adaptive Circuit Systems — Circuit Lab Concepts
 
 **Hedegreen Research**  
 **2026.03.24**  
@@ -6,23 +6,64 @@
 
 ---
 
+## Working note
+
+This document now belongs to the wider `Adaptive Circuit Systems` direction.
+
+Current reading:
+
+- `Circuit Lab` is the current bench
+- `Module Builder` is the current composition layer
+- `Brain Builder` is future
+- `Elliot` is the organism/application line
+
+The older `Neuron Lab` / `Elliot Lab` language should now be read as earlier naming around the
+same bench direction, not as the whole program name.
+
 ## Core Idea
 
-A visual workbench for designing, testing, and understanding neuron types using a water/flow metaphor. Each neuron is a physical container with inflow, outflow, capacity, and behavior. Connections between neurons are drawn channels with physical properties. The tool has two modes: Flow Mode (visual water simulation) and Math Mode (live equations and parameters behind the same system). Built for Codex-driven development. GitHub release under Hedegreen Research.
+A visual workbench for designing, testing, and understanding neuron types using a water/flow metaphor. Each neuron is a physical container with inflow, outflow, capacity, and behavior. Connections between neurons are drawn channels with physical properties. The tool conceptually wants two views over the same running state. In the current product shell those views are named `Water Mode` (the intuitive visual layer) and `Build Mode` (the editing and parameter layer). Built for Codex-driven development. GitHub release under Hedegreen Research.
+
+Current locked product reading:
+
+- Circuit Lab is not the whole Elliot stack
+- it is the bench for designing the internal structure behind a future Elliot unit
+- terminal output belongs to `Output Basin`
+- `Reservoir` is active storage and return inside the circuit
+- explicit public interface ports are marked inside Lab before export
+- `elliot-module/v1` is the first reusable module boundary
+- Module Builder is the next layer up, but only as a black-box composition surface over exported modules
 
 ---
 
 ## Two Modes
 
-**Flow Mode:** Water, containers, channels. Visual. Intuitive. Build and observe.
+**Water Mode:** Water, containers, channels. Visual. Intuitive. Read the circuit before the math.
 
-**Math Mode:** Same system, same state. Water visuals replaced by live equations, parameters, derivatives. Every component shows its mathematical equivalent updating in real time. Toggle between modes without losing state.
+**Build Mode:** Same system, same state. Builder controls, parameters, and debug density live here. Future equation overlays can stay inside Build rather than forcing a separate third mode.
+
+Short decision:
+
+- earlier concept language called these `Flow Mode` and `Math Mode`
+- current product implementation ships them as `Water Mode` and `Build Mode`
+- same scene, same state, no reset on toggle
+
+Current architecture line:
+
+- `scene` = Lab working document with internal graph
+- `module` = exported reusable unit with explicit public interface
+- `module instance` = black-box imported unit inside Builder
 
 ---
 
 ## Conservation Rule
 
-Water cannot disappear. All output from any component must go somewhere: another neuron, a channel, or a designated drain. Leaks are not lost: they are bottom outputs connected via pipes. This is a closed system.
+Water cannot disappear. All output from any component must go somewhere: another neuron, a channel, or a designated terminal sink. Leaks are not lost: they are bottom outputs connected via pipes. This is a closed system.
+
+Current shell decision:
+
+- `Output Basin` is the present terminal sink
+- `Reservoir` is active storage and may return water through explicit outgoing pipes
 
 ---
 
@@ -196,6 +237,12 @@ A pipe that changes width based on usage. More water flow = wider pipe = easier 
 
 **Known equivalent:** Synaptic plasticity. Hebbian learning. Biological memristors proposed by Leon Chua (1971).
 
+Decision note:
+
+- this remains a future pipe family
+- current shell does not yet implement runtime `erosion_rate`, `silt_rate`, `W_min`, or `W_max`
+- mode split and current pipe readability come first
+
 ---
 
 ## Component Summary
@@ -213,6 +260,47 @@ A pipe that changes width based on usage. More water flow = wider pipe = easier 
 | Merger | Pipe | Signal combination |
 | Sluse | Pipe | Bidirectional gating |
 | Memristor Pipe | Pipe | Adaptive learning |
+
+---
+
+## Future Idea Bank
+
+These are future ideas, not current implementation scope.
+They should stay recorded, but they should not pull the shell away from the current single-fluid bench too early.
+
+### Reservoir Families
+
+`Reservoir` should not necessarily stay one fixed thing forever.
+Later versions may split this into several roles:
+
+- `Storage Reservoir`: a holding basin that can later feed back into the system
+- `Return Reservoir`: a slower recirculation source inside the circuit rather than a final sink
+- `Ambient Reservoir`: a diffuse system-wide background source instead of one direct pipe
+- `Bias Reservoir`: a persistent background store that nudges local circuits without acting like a visible pipe source
+
+The point is that terminal output already belongs to `Output Basin`, so later reservoir families should mostly stay inside the circuit as memory, recharge, or atmosphere.
+
+### Multi-Fluid Simulation
+
+The first shell should stay single-fluid.
+Later versions may test multiple fluids in the same bench.
+
+This could allow:
+
+- one fluid acting as direct signal
+- another fluid acting as modulator or inhibitor
+- a fluid making another fluid thicker or slower
+- fluid mixtures changing leak, threshold, or pipe response
+
+This is not only a graphics idea.
+It is a way to explore richer state, gating, inhibition, and long-tail memory in the same physical metaphor.
+
+If multi-fluid work ever starts, the system should define clearly:
+
+- whether fluids mix or remain separable
+- whether capacity is shared or fluid-specific
+- whether pipes carry layered or blended state
+- how the UI and logs keep multiple fluids legible
 
 ---
 

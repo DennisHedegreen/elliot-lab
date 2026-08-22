@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Module Builder</title>
+    <meta
+      name="description"
+      content="Black-box module builder for Circuit Lab exports inside Adaptive Circuit Systems."
+    />
+    <link rel="stylesheet" href="./styles.css" />
+  </head>
+  <body>
+    <div class="app-shell">
+      <header class="topbar">
+        <div class="brand-block">
+          <p class="eyebrow">Adaptive Circuit Systems</p>
+          <h1>Module Canvas</h1>
+          <p class="brand-note">
+            Import reusable modules or export-ready Circuit Lab scenes, wire public ports, and run the composition back through Circuit Lab.
+          </p>
+        </div>
+
+        <div class="scene-title-block">
+          <label class="field-label" for="builder-title-input">Module Scene</label>
+          <input id="builder-title-input" class="scene-title-input" type="text" />
+          <p id="builder-meta" class="scene-meta"></p>
+        </div>
+
+        <div class="topbar-actions">
+          <button id="import-module-button" class="action-button action-button-accent">
+            Import Module or Scene
+          </button>
+          <button id="open-lab-button" class="action-button">Open Circuit Lab</button>
+          <button id="run-lab-button" class="action-button action-button-accent">
+            Run in Circuit Lab
+          </button>
+          <button id="save-builder-draft-button" class="action-button">Save Draft</button>
+          <button id="load-builder-draft-button" class="action-button">Load Draft</button>
+          <button id="save-builder-file-button" class="action-button">Save File</button>
+          <button id="load-builder-file-button" class="action-button">Load File</button>
+          <button id="clear-builder-button" class="action-button">Clear Scene</button>
+          <input id="module-file-input" type="file" accept=".json,.module.json,application/json" hidden />
+          <input id="builder-file-input" type="file" accept=".json,application/json" hidden />
+        </div>
+      </header>
+
+      <main class="layout-grid">
+        <aside class="left-rail">
+          <section class="panel">
+            <div class="panel-head">
+              <p class="panel-eyebrow">Library</p>
+              <h2>Imported Modules</h2>
+            </div>
+            <div id="module-library-list" class="module-library-list"></div>
+            <p class="panel-note">
+              Imported modules stay black-boxed here. Builder also accepts export-ready Lab scenes and converts them into the same module boundary on import.
+            </p>
+          </section>
+
+          <section class="panel">
+            <div class="panel-head">
+              <p class="panel-eyebrow">Routing</p>
+              <h2>Route Builder</h2>
+            </div>
+            <form id="route-builder-form" class="stack-form">
+              <label class="field">
+                <span class="field-label">From Output</span>
+                <select id="route-from-select"></select>
+              </label>
+              <label class="field">
+                <span class="field-label">To Input</span>
+                <select id="route-to-select"></select>
+              </label>
+
+              <div class="field-row">
+                <label class="field">
+                  <span class="field-label">Width</span>
+                  <input id="route-width-input" type="number" min="4" max="40" step="1" value="14" />
+                </label>
+                <label class="field">
+                  <span class="field-label">Length</span>
+                  <input id="route-length-input" type="number" min="40" max="600" step="10" value="220" />
+                </label>
+              </div>
+
+              <div class="field-row">
+                <label class="field">
+                  <span class="field-label">Max Flow</span>
+                  <input id="route-flow-input" type="number" min="0.1" max="10" step="0.1" value="1.0" />
+                </label>
+                <label class="field">
+                  <span class="field-label">Transit</span>
+                  <input id="route-transit-input" type="number" min="1" max="12" step="1" value="2" />
+                </label>
+              </div>
+
+              <button id="route-builder-submit" type="submit" class="action-button action-button-wide action-button-accent">
+                Add Route
+              </button>
+              <p id="route-builder-note" class="panel-note panel-note-tight"></p>
+            </form>
+          </section>
+
+          <section class="panel">
+            <div class="panel-head">
+              <p class="panel-eyebrow">Readiness</p>
+              <h2>Composition Boundary</h2>
+            </div>
+            <div id="builder-readiness-list" class="readiness-list"></div>
+          </section>
+        </aside>
+
+        <section class="workspace-panel">
+          <div class="workspace-top">
+            <div class="status-cards">
+              <article class="status-card">
+                <p class="status-label">Modules</p>
+                <p id="module-count-value" class="status-value">0</p>
+              </article>
+              <article class="status-card">
+                <p class="status-label">Instances</p>
+                <p id="instance-count-value" class="status-value">0</p>
+              </article>
+              <article class="status-card">
+                <p class="status-label">Routes</p>
+                <p id="route-count-value" class="status-value">0</p>
+              </article>
+              <article class="status-card">
+                <p class="status-label">Public Inputs</p>
+                <p id="input-count-value" class="status-value">0</p>
+              </article>
+              <article class="status-card">
+                <p class="status-label">Public Outputs</p>
+                <p id="output-count-value" class="status-value">0</p>
+              </article>
+            </div>
+
+            <div class="workspace-meta">
+              <p id="builder-summary" class="scene-summary"></p>
+              <p id="builder-selection" class="scene-summary"></p>
+            </div>
+          </div>
+
+          <div id="builder-canvas" class="canvas-surface" aria-label="Module Builder canvas">
+            <svg id="builder-route-layer" class="route-layer"></svg>
+            <div id="builder-instance-layer" class="instance-layer"></div>
+          </div>
+        </section>
+
+        <aside class="right-rail">
+          <section class="panel inspector-panel">
+            <div class="panel-head">
+              <p class="panel-eyebrow">Inspector</p>
+              <h2>Selected Object</h2>
+            </div>
+
+            <div id="builder-inspector-content" class="inspector-content"></div>
+
+            <div class="inspector-actions">
+              <button id="delete-builder-selection-button" class="action-button action-button-wide">
+                Delete Selection
+              </button>
+            </div>
+          </section>
+        </aside>
+      </main>
+    </div>
+
+    <script src="./app.js"></script>
+  </body>
+</html>
