@@ -11,7 +11,11 @@ It is a live local workbench with a real browser shell, a first export format, a
 layer.
 
 If you want the shortest current truth before reading further, start with `STATUS.md`.
-If you want the broader program structure, read `../_system/architecture/ADAPTIVE-CIRCUIT-SYSTEMS-PROGRAM.md`.
+The broader program architecture is maintained in the Hedegreen Research workspace; the sibling `_system` path is not part of this standalone public repository.
+
+## Public Demo and Workbench
+
+The related [Circuit Lab demo in TID](https://hedegreenresearch.com/tid/circuit-lab-demo/) is a smaller public sketch, not this full local workbench or a hosted Streamlit edition. Use the setup and status instructions here for the workbench.
 
 ## What It Is
 
